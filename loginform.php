@@ -8,7 +8,7 @@
 		Username/Phone no.:<br>
 		<input type="text" name="username" required><br>
 		Password:<br>
-		<input type="password" name="password"><br>
+		<input type="password" name="password" required><br>
 		<input type="submit" value="Submit">
 	</form>
 	<a href="startpage.php"><button>Back</button></a>
