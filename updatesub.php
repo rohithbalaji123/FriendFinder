@@ -1,6 +1,9 @@
+<!-- updating the database and displaying it -->
+<link type="text/css" rel="stylesheet" href="regissubcss.css" />
+<body background="images/background.jpg">
 	<?php
 		error_reporting(0);
-		define('DB_NAME', 'userdetails');
+		define('DB_NAME', 'userdetail');
 		define('DB_USER', 'root');
 		define('DB_PASSWORD', '');
 		define('DB_HOST', 'localhost');
@@ -12,7 +15,11 @@
 
 		$db_selected = mysql_select_db(DB_NAME, $link);
 		if(!$db_selected) {
-			die("Database error:". mysql_error());
+			$sql = 'CREATE DATABASE ' . DB_NAME;
+			if (mysql_query($sql, $link)) {
+			} else {
+			    die('Error creating database: ' . mysql_error());
+			}
 		}
 
 		$usernameold = test_input($_POST['usernameold']);
@@ -90,10 +97,6 @@
 				if(move_uploaded_file($temp_name, $target_path)) {
 					$sql = "UPDATE details SET username='$username', password='$password', profilepic='$target_path', email='$email',
 							 phone='$phone'";
-
-					if(!mysql_query($sql)) {
-						die("Error". mysql_error());
-					}
 				}
 				else {
 					echo "Error uploading profile picture...";
@@ -142,10 +145,6 @@
 					if(move_uploaded_file($temp_name, $target_path)) {
 						$sql = "UPDATE details SET username='$username', password='$password', profilepic='$target_path', email='$email',
 								 phone='$phone'";
-
-						if(!mysql_query($sql)) {
-							die("Error". mysql_error());
-						}
 					}
 					else {
 						echo "Error uploading profile picture...";
@@ -164,7 +163,7 @@
 		}
 
 	?>
-	<table>
+	<table border="2px solid #ffffff">
 		<thead>
 			<tr>
 				<th>Detail</th>
@@ -178,7 +177,7 @@
 			</tr>
 			<tr>
 				<td><?php echo "Profile Picture" ?></td>
-				<td><img src="<?php echo $target_path ?>" style="width: 50px; height: 50px" /></td>
+				<td><img src="<?php echo $target_path ?>" style="width: 100px; height: 100px" /></td>
 			</tr>
 			<tr>
 				<td><?php echo "Email" ?></td>
@@ -190,4 +189,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<a href="startpage.php"><button>Back</button></a>
+	<a href="startpage.php"><button class="choose">Homepage</button></a>
+	<a href="findfriend.php"><button class="choose">Find Friend</button></a>
+	<a href="updateform.php"><button class="choose">Update</button></a>
+</body>

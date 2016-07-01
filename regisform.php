@@ -1,10 +1,14 @@
+<!-- form for registering -->
 <!DOCTYPE html>
 <html>
 <head>
 	<title>User Details</title>
+	<link type="text/css" rel="stylesheet" href="regisformcss.css" />
 </head>
-<body>
+<body background="images/background.jpg">
 	<form method="post" action="regissub.php" enctype="multipart/form-data">
+		<fieldset>
+			<legend>Enter Details</legend>
 		Username:<br>
 		<input type="text" name="username" required><br>
 		Password:<br>
@@ -15,8 +19,9 @@
 		<input type="email" name="email" required><br>
 		Phone No:<br>
 		<input type="number" name="phone" min="1000000000" max="9999999999" required><br>
-		<input type="submit" value="Submit">
+		<input type="submit" value="Submit" class="choose">
+		</fieldset>
 	</form>
-	<a href="startpage.php"><button>Back</button></a>
+	<a href="startpage.php"><button id="back">Back to Homepage</button></a>
 </body>
 </html>

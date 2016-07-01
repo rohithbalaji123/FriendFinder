@@ -1,0 +1,33 @@
+.choose{/* css for button */
+	display: inline-block;
+	height: 60px;
+	width: 150px;
+	text-align: center;
+	margin: 5px 3px;
+	position: relative;
+	top: 200px;
+	left: 40%;
+	margin: 0px 50px 0px 20px;
+	border-radius: 5px;
+	background-color: #FFFF00;
+	border: 0;
+	color: white;
+	box-shadow: 3px 3px 3px #607D8B;
+	font-weight: bold;
+	font-size: 20px;
+	color: #000000;
+}
+
+#welcomemessage{/* css for the message */
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 30px;
+	font-family: cursive;
+	text-align: center;
+	position: relative;
+	top: 100px;
+}
+
+.choose:hover {
+	background-color: #3F51B5;
+}

@@ -1,0 +1,59 @@
+form{ /* css for the components in form */
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 20px;
+	font-family: cursive;
+	position: relative;
+	margin: 20px;
+	width: 20%;
+	left: 35%;
+	top: 100px;
+}
+
+.choose{ /* css for buttons */
+	display: inline-block;
+	height: 40px;
+	width: 100px;
+	top: 10px;
+	margin: 20px 0px 20px 20px;
+	text-align: center;
+	position: relative;
+	border-radius: 5px;
+	background-color: #FFFF00;
+	color: black;
+	font-weight: bold;
+	font-size: 20px;
+	border: 0;
+	box-shadow: 3px 3px 3px #607D8B;
+}
+
+.choose:hover {
+	background-color: #3F51B5;
+}
+
+#back{ /* css for back button */
+	display: inline-block;
+	height: 60px;
+	width: 150px;
+	text-align: center;
+	margin: 5px 3px;
+	position: relative;
+	top: 200px;
+	left: 40%;
+	margin: 0px 50px 0px 20px;
+	border-radius: 5px;
+	background-color: #FFFF00;
+	border: 0;
+	color: white;
+	box-shadow: 3px 3px 3px #607D8B;
+	font-weight: bold;
+	font-size: 20px;
+	color: #000000;
+}
+#back:hover {
+	background-color: #3F51B5;
+}
+
+input {
+	margin: 10px 5px;
+}

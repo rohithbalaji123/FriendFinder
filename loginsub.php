@@ -1,6 +1,9 @@
+<!-- Displaying the details of the logged in person -->
+<link type="text/css" rel="stylesheet" href="loginsubcss.css" />
+<body background="images/background.jpg">	
 	<?php
 		error_reporting(0);
-		define('DB_NAME', 'userdetails');
+		define('DB_NAME', 'userdetail');
 		define('DB_USER', 'root');
 		define('DB_PASSWORD', '');
 		define('DB_HOST', 'localhost');
@@ -12,8 +15,28 @@
 
 		$db_selected = mysql_select_db(DB_NAME, $link);
 		if(!$db_selected) {
-			die("Database error:". mysql_error());
+			$sql = 'CREATE DATABASE ' . DB_NAME;
+			$db_selected = mysql_select_db(DB_NAME, $link);
+			if (mysql_query($sql, $link)) {
+			} else {
+			    die('Error creating database: ' . mysql_error());
+			}
 		}
+
+		$sql = "CREATE TABLE IF NOT EXISTS `details` (
+				 `id` int(11) NOT NULL AUTO_INCREMENT,
+				 `username` varchar(255) DEFAULT NULL,
+				 `password` varchar(255) DEFAULT NULL,
+				 `profilepic` varchar(225) DEFAULT NULL,
+				 `email` varchar(255) DEFAULT NULL,
+				 `phone` varchar(10) DEFAULT NULL,
+				 PRIMARY KEY (`id`),
+				 UNIQUE KEY `username` (`username`)
+				) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1";
+		if (mysql_query($sql, $link)) {
+			} else {
+			    die('Error creating table: ' . mysql_error());
+			}
 
 		$username = test_input($_POST['username']);
 		$phone = test_input($_POST['username']);
@@ -47,7 +70,7 @@
 			if(password_verify($password, $result['password'])) {
 				$GLOBALS['flagu'] = 1;
 				?>
-				<table>
+				<table border="2px solid #ffffff">
 					<thead>
 						<tr>
 							<th>Detail</th>
@@ -61,7 +84,7 @@
 						</tr>
 						<tr>
 							<td><?php echo "Profile Picture" ?></td>
-							<td><img src="<?php echo $result['profilepic'] ?>" style="width: 50px; height: 50px" /></td>
+							<td><img src="<?php echo $result['profilepic'] ?>" style="width: 100px; height: 100px" /></td>
 						</tr>
 						<tr>
 							<td><?php echo "Email" ?></td>
@@ -81,7 +104,7 @@
 				if(password_verify($password, $result['password'])) {
 					$GLOBALS['flagp'] = 1;
 					?>
-					<table>
+					<table border="2px solid #ffffff">
 						<thead>
 							<tr>
 								<th>Detail</th>
@@ -95,7 +118,7 @@
 							</tr>
 							<tr>
 								<td><?php echo "Profile Picture" ?></td>
-								<td><img src="<?php echo $result['profilepic'] ?>" style="width: 50px; height: 50px" /></td>
+								<td><img src="<?php echo $result['profilepic'] ?>" style="width: 100px; height: 100px" /></td>
 							</tr>
 							<tr>
 								<td><?php echo "Email" ?></td>
@@ -121,5 +144,7 @@
 		}
 
 	?>
-	<a href="findfriend.php"><button>Find Friend</button></a>
-	<a href="startpage.php"><button>Back</button></a>
+	<a href="findfriend.php"><button class="choose">Find Friend</button></a>
+	<a href="startpage.php"><button class="choose">Back</button></a>
+	<a href="updateform.php"><button class="choose">Update</button></a>
+</body>
