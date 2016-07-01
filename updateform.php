@@ -5,9 +5,9 @@
 </head>
 <body>
 	<form method="post" action="updatesub.php" enctype="multipart/form-data">
-		Username/Phone no.:<br>
+		Old Username/Phone no.:<br>
 		<input type="text" name="usernameold" required><br>
-		Password:<br>
+		Old Password:<br>
 		<input type="password" name="passwordold" required><br>
 		Username:<br>
 		<input type="text" name="username" required><br>

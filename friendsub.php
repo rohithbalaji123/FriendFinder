@@ -44,7 +44,7 @@
 		$flagp = 0;
 
 		while($result = mysql_fetch_array($resultsu)) {
-			if(password_verify($password, $result['password'])) {
+			if($result['username'] == $username) {
 				$GLOBALS['flagu'] = 1;
 				?>
 				<table>
@@ -78,7 +78,7 @@
 		}
 		if($GLOBALS['flagu'] == 0) {
 			while($result = mysql_fetch_array($resultsp)) {
-				if(password_verify($password, $result['password'])) {
+				if($result['phone'] == $phone) {
 					$GLOBALS['flagp'] = 1;
 					?>
 					<table>
@@ -112,14 +112,5 @@
 			}
 		}
 
-		if($flagu === 0 && $flagp === 0) {
-			echo "<script>
-					window.location.href='loginform.php';
-					alert('Username/Phone No. and Password do not match...');
-				  </script>";
-			exit;
-		}
-
 	?>
-	<a href="findfriend.php"><button>Find Friend</button></a>
 	<a href="startpage.php"><button>Back</button></a>

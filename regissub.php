@@ -103,6 +103,7 @@
 		</tbody>
 	</table>
 	<a href="startpage.php"><button>Back</button></a>
+	<a href="findfriend.php"><button>Find Friend</button></a>
 
 	<?php
 		
