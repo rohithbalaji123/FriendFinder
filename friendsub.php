@@ -2,23 +2,22 @@
 <link type="text/css" rel="stylesheet" href="regissubcss.css" />
 <body background="images/background.jpg">
 	<?php
-		error_reporting(0);
 		define('DB_NAME', 'userdetail');
 		define('DB_USER', 'root');
 		define('DB_PASSWORD', '');
 		define('DB_HOST', 'localhost');
 
-		$link = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
-		if(!$link) {
-			die("Connection failed ". mysql_error());
+		$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
+		if($link->connect_errno) {
+			die('Error connecting ...' . mysqli_error($link));
 		}
 
-		$db_selected = mysql_select_db(DB_NAME, $link);
+		$db_selected = mysqli_select_db($link, DB_NAME);
 		if(!$db_selected) {
 			$sql = 'CREATE DATABASE ' . DB_NAME;
-			if (mysql_query($sql, $link)) {
+			if (mysqli_query($link, $sql)) {
 			} else {
-			    die('Error creating database: ' . mysql_error());
+			    die('Error creating database: ' . mysqli_error($link));
 			}
 		}
 
@@ -32,15 +31,14 @@
 				 PRIMARY KEY (`id`),
 				 UNIQUE KEY `username` (`username`)
 				) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1";
-		if (mysql_query($sql, $link)) {
+		if (mysqli_query($link, $sql)) {
 		} 
 		else {
-		    die('Error creating table: ' . mysql_error());
+		    die('Error creating table: ' . mysqli_error($link));
 		}
 
 		$username = test_input($_POST['username']);
 		$phone = test_input($_POST['username']);
-		$password = $_POST['password'];
 
 		function test_input($data) {
 			$data = trim($data);
@@ -50,14 +48,14 @@
 		}
 
 		$sqlu = "SELECT * FROM details WHERE username = '".$username."'";
-		$resultsu = mysql_query($sqlu);
+		$resultsu = mysqli_query($link, $sqlu);
 
 		$sqlp = "SELECT * FROM details WHERE phone = '".$phone."'";
-		$resultsp = mysql_query($sqlp);
+		$resultsp = mysqli_query($link, $sqlp);
 
-		if(mysql_num_rows($resultsu) === 0 && mysql_num_rows($resultsp) === 0) {
+		if(mysqli_num_rows($resultsu) === 0 && mysqli_num_rows($resultsp) === 0) {
 			echo "<script>
-					window.location.href='loginform.php';
+					window.location.href='findfriend.html';
 					alert('Username or Phone Number does not exist...');
 				  </script>";
 			exit;
@@ -66,7 +64,7 @@
 		$flagu = 0;
 		$flagp = 0;
 
-		while($result = mysql_fetch_array($resultsu)) {
+		while($result = mysqli_fetch_array($resultsu)) {
 			if($result['username'] == $username) {
 				$GLOBALS['flagu'] = 1;
 				?>
@@ -100,7 +98,7 @@
 			}
 		}
 		if($GLOBALS['flagu'] == 0) {
-			while($result = mysql_fetch_array($resultsp)) {
+			while($result = mysqli_fetch_array($resultsp)) {
 				if($result['phone'] == $phone) {
 					$GLOBALS['flagp'] = 1;
 					?>
@@ -136,7 +134,7 @@
 		}
 
 	?>
-	<a href="startpage.php"><button class="choose">Homepage</button></a>
-	<a href="findfriend.php"><button class="choose">Find Friend</button></a>
-	<a href="updateform.php"><button class="choose">Update</button></a>
+	<a href="startpage.html"><button class="choose">Homepage</button></a>
+	<a href="findfriend.html"><button class="choose">Find Friend</button></a>
+	<a href="updateform.html"><button class="choose">Update</button></a>
 </body>

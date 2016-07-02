@@ -2,23 +2,22 @@
 <link type="text/css" rel="stylesheet" href="regissubcss.css" />
 <body background="images/background.jpg">
 	<?php
-		error_reporting(0);
 		define('DB_NAME', 'userdetail');
 		define('DB_USER', 'root');
 		define('DB_PASSWORD', '');
 		define('DB_HOST', 'localhost');
 
-		$link = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
-		if(!$link) {
-			die("Connection failed ". mysql_error());
+		$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
+		if($link->connect_errno) {
+			die('Error connecting ...' . mysqli_error($link));
 		}
 
-		$db_selected = mysql_select_db(DB_NAME, $link);
+		$db_selected = mysqli_select_db($link, DB_NAME);
 		if(!$db_selected) {
 			$sql = 'CREATE DATABASE ' . DB_NAME;
-			if (mysql_query($sql, $link)) {
+			if (mysqli_query($link, $sql)) {
 			} else {
-			    die('Error creating database: ' . mysql_error());
+			    die('Error creating database: ' . mysqli_error($link));
 			}
 		}
 
@@ -29,7 +28,7 @@
 		$username = test_input($_POST['username']);
 		$password = test_input($_POST['password']);
 		$password = password_hash($password,PASSWORD_BCRYPT, array( 'cost' => 12));
-		$profilepic = $_POST['profilepic'];
+		$profilepic = $_FILES['profilepic'];
 		$email = test_input($_POST['email']);
 		$phone = test_input($_POST['phone']);
 
@@ -41,14 +40,14 @@
 		}
 
 		$sqlu = "SELECT * FROM details WHERE username = '".$usernameold."'";
-		$resultsu = mysql_query($sqlu);
+		$resultsu = mysqli_query($link, $sqlu);
 
 		$sqlp = "SELECT * FROM details WHERE phone = '".$phoneold."'";
-		$resultsp = mysql_query($sqlp);
+		$resultsp = mysqli_query($link, $sqlp);
 
-		if(mysql_num_rows($resultsu) === 0 && mysql_num_rows($resultsp) === 0) {
+		if(mysqli_num_rows($resultsu) === 0 && mysqli_num_rows($resultsp) === 0) {
 			echo "<script>
-					window.location.href='updateform.php';
+					window.location.href='updateform.html';
 					alert('Username or Phone Number does not exist...');
 				  </script>";
 			exit;
@@ -57,35 +56,35 @@
 		$flagu = 0;
 		$flagp = 0;
 
-		while($result = mysql_fetch_array($resultsu)) {
+		while($result = mysqli_fetch_array($resultsu)) {
 			if(password_verify($passwordold, $result['password'])) {
 				$GLOBALS['flagu'] = 1;
 				$sqlu = "SELECT * FROM details WHERE username = '".$username."'";
-				$resultsu = mysql_query($sqlu);
+				$resultsu = mysqli_query($link, $sqlu);
 
 				$sqlp = "SELECT * FROM details WHERE phone = '".$phone."'";
-				$resultsp = mysql_query($sqlp);
+				$resultsp = mysqli_query($link, $sqlp);
 
 				$sqle = "SELECT * FROM details WHERE email = '".$email."'";
-				$resultse = mysql_query($sqle);
+				$resultse = mysqli_query($link, $sqle);
 
-				if(mysql_num_rows($resultsu) != 0 && $result['username'] != $username) {
+				if(mysqli_num_rows($resultsu) != 0 && $result['username'] != $username) {
 					echo "<script>
-							window.location.href='updateform.php';
+							window.location.href='updateform.html';
 							alert('Username already exists...');
 						  </script>";
 					exit;
 				}
-				else if(mysql_num_rows($resultsp) != 0 && $result['phone'] != $phone) {
+				else if(mysqli_num_rows($resultsp) != 0 && $result['phone'] != $phone) {
 					echo "<script>
-							window.location.href='updateform.php';
+							window.location.href='updateform.html';
 							alert('Phone Number already exists...');
 						  </script>";
 					exit;
 				}
-				else if(mysql_num_rows($resultse) != 0 && $result['email'] != $email) {
+				else if(mysqli_num_rows($resultse) != 0 && $result['email'] != $email) {
 					echo "<script>
-							window.location.href='updateform.php';
+							window.location.href='updateform.html';
 							alert('Email already exists...');
 						  </script>";
 					exit;
@@ -97,6 +96,7 @@
 				if(move_uploaded_file($temp_name, $target_path)) {
 					$sql = "UPDATE details SET username='$username', password='$password', profilepic='$target_path', email='$email',
 							 phone='$phone'";
+					mysqli_query($link, $sql);
 				}
 				else {
 					echo "Error uploading profile picture...";
@@ -105,35 +105,35 @@
 			}
 		}
 		if($GLOBALS['flagu'] == 0) {
-			while($result = mysql_fetch_array($resultsp)) {
+			while($result = mysqli_fetch_array($resultsp)) {
 				if(password_verify($passwordold, $result['password'])) {
 					$GLOBALS['flagp'] = 1;
 					$sqlu = "SELECT * FROM details WHERE username = '".$username."'";
-					$resultsu = mysql_query($sqlu);
+					$resultsu = mysqli_query($link, $sqlu);
 
 					$sqlp = "SELECT * FROM details WHERE phone = '".$phone."'";
-					$resultsp = mysql_query($sqlp);
+					$resultsp = mysqli_query($link, $sqlp);
 
 					$sqle = "SELECT * FROM details WHERE email = '".$email."'";
-					$resultse = mysql_query($sqle);
+					$resultse = mysqli_query($link, $sqle);
 
-					if(mysql_num_rows($resultsu) != 0 && $result['username'] != $username) {
+					if(mysqli_num_rows($resultsu) != 0 && $result['username'] != $username) {
 						echo "<script>
-								window.location.href='updateform.php';
+								window.location.href='updateform.html';
 								alert('Username already exists...');
 							  </script>";
 						exit;
 					}
-					else if(mysql_num_rows($resultsp) != 0 && $result['phone'] != $phone) {
+					else if(mysqli_num_rows($resultsp) != 0 && $result['phone'] != $phone) {
 						echo "<script>
-								window.location.href='updateform.php';
+								window.location.href='updateform.html';
 								alert('Phone Number already exists...');
 							  </script>";
 						exit;
 					}
-					else if(mysql_num_rows($resultse) != 0 && $result['email'] != $email) {
+					else if(mysqli_num_rows($resultse) != 0 && $result['email'] != $email) {
 						echo "<script>
-								window.location.href='updateform.php';
+								window.location.href='updateform.html';
 								alert('Email already exists...');
 							  </script>";
 						exit;
@@ -145,6 +145,7 @@
 					if(move_uploaded_file($temp_name, $target_path)) {
 						$sql = "UPDATE details SET username='$username', password='$password', profilepic='$target_path', email='$email',
 								 phone='$phone'";
+						mysqli_query($link, $sql);
 					}
 					else {
 						echo "Error uploading profile picture...";
@@ -189,7 +190,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<a href="startpage.php"><button class="choose">Homepage</button></a>
-	<a href="findfriend.php"><button class="choose">Find Friend</button></a>
-	<a href="updateform.php"><button class="choose">Update</button></a>
+	<a href="startpage.html"><button class="choose">Homepage</button></a>
+	<a href="findfriend.html"><button class="choose">Find Friend</button></a>
+	<a href="updateform.html"><button class="choose">Update</button></a>
 </body>

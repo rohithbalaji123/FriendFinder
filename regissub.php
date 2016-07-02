@@ -1,23 +1,23 @@
+<!-- registering the user and displaying his details -->
 <link type="text/css" rel="stylesheet" href="regissubcss.css" />
 <body background="images/background.jpg">
 	<?php
-		error_reporting(0);
 		define('DB_NAME', 'userdetail');
 		define('DB_USER', 'root');
 		define('DB_PASSWORD', '');
 		define('DB_HOST', 'localhost');
 
-		$link = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
-		if(!$link) {
-			die("Connection failed ". mysql_error());
+		$link = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
+		if($link->connect_errno) {
+			die('Error connecting ...' . mysqli_error($link));
 		}
-
-		$db_selected = mysql_select_db(DB_NAME, $link);
+		
+		$db_selected = mysqli_select_db($link, DB_NAME);
 		if(!$db_selected) {
-			$sql = 'CREATE DATABASE ' . DB_NAME;		/* creating database if it doesn't already exists */
-			if (mysql_query($sql, $link)) {
+			$sql = 'CREATE DATABASE ' . DB_NAME;	/* creating database if it doesn't already exists */
+			if (mysqli_query($link, $sql)) {
 			} else {
-			    die('Error creating database: ' . mysql_error());
+			    die('Error creating database: ' . mysqli_error($link));
 			}
 		}
 
@@ -31,15 +31,15 @@
 				 PRIMARY KEY (`id`),
 				 UNIQUE KEY `username` (`username`)
 				) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1";
-		if (mysql_query($sql, $link)) {
+		if (mysqli_query($link, $sql)) {
 			} else {
-			    die('Error creating table: ' . mysql_error());
+			    die('Error creating table: ' . mysqli_error($link));
 			}
 
 		$username = test_input($_POST['username']);
 		$password = test_input($_POST['password']);
 		$password = password_hash($password,PASSWORD_BCRYPT, array( 'cost' => 12)); /*hashing password*/
-		$profilepic = $_POST['profilepic'];
+		$profilepic = $_FILES['profilepic'];
 		$email = test_input($_POST['email']);
 		$phone = test_input($_POST['phone']);
 
@@ -51,31 +51,31 @@
 		}
 
 		$sqlu = "SELECT * FROM details WHERE username = '".$username."'"; /* to check for repetition of username, phone, email */
-		$resultsu = mysql_query($sqlu);
+		$resultsu = mysqli_query($link, $sqlu);
 
 		$sqlp = "SELECT * FROM details WHERE phone = '".$phone."'";
-		$resultsp = mysql_query($sqlp);
+		$resultsp = mysqli_query($link, $sqlp);
 
 		$sqle = "SELECT * FROM details WHERE email = '".$email."'";
-		$resultse = mysql_query($sqle);
+		$resultse = mysqli_query($link, $sqle);
 
-		if(mysql_num_rows($resultsu) != 0) {
+		if(mysqli_num_rows($resultsu) != 0) {
 			echo "<script>
-					window.location.href='regisform.php';
+					window.location.href='regisform.html';
 					alert('Username already exists...');
 				  </script>";
 			exit;
 		}
-		else if(mysql_num_rows($resultsp) != 0) {
+		else if(mysqli_num_rows($resultsp) != 0) {
 			echo "<script>
-					window.location.href='regisform.php';
+					window.location.href='regisform.html';
 					alert('Phone Number already exists...');
 				  </script>";
 			exit;
 		}
-		else if(mysql_num_rows($resultse) != 0) {
+		else if(mysqli_num_rows($resultse) != 0) {
 			echo "<script>
-					window.location.href='regisform.php';
+					window.location.href='regisform.html';
 					alert('Email already exists...');
 				  </script>";
 			exit;
@@ -87,6 +87,7 @@
 		if(move_uploaded_file($temp_name, $target_path)) { /* inserting values in database */
 			$sql = "INSERT INTO details (username, password, profilepic, email, phone) 
 					VALUES ('$username', '$password', '$target_path', '$email', '$phone')";
+			mysqli_query($link, $sql);
 		}
 		else {
 			echo "Error uploading profile picture...";
@@ -119,12 +120,12 @@
 			</tr>
 		</tbody>
 	</table>
-	<a href="startpage.php"><button class="choose">Back</button></a>
-	<a href="findfriend.php"><button class="choose">Find Friend</button></a>
-	<a href="updateform.php"><button class="choose">Update</button></a>
+	<a href="startpage.html"><button class="choose">Back</button></a>
+	<a href="findfriend.html"><button class="choose">Find Friend</button></a>
+	<a href="updateform.html"><button class="choose">Update</button></a>
 
 	<?php
 		
-		mysql_close();
+		mysqli_close($link);
 	?>
 </body>
